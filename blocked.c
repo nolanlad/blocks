@@ -3,8 +3,11 @@
 
 #define BLOCK_SIZE 1000 
 
-//#define COMMAND(comm) ##comm fun_##comm(void){\
-//return 1;}\
+#define COMMAND(comm) fun_##comm(void){\
+return 90;}\
+
+COMMAND(int)
+
 
 typedef struct blocked_int
 {
@@ -63,10 +66,10 @@ Block * new_block(void)
 
 int main()
 {
-    int k;
+    int k = fun_int();
     Block * b = new_block();
     setitem(b,0,5);
-    setitem(b,257,6);
+    setitem(b,257,k);
     printf("%d\n",getitem(b,257));
     setitem(b,600,8);
     printf("yeet %d\n",getitem(b,600));
