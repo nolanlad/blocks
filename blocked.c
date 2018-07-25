@@ -3,17 +3,55 @@
 
 #define BLOCK_SIZE 1000 
 
-#define COMMAND(comm) fun_##comm(void){\
-return 90;}\
+#define COMMAND(com) struct blocked_##com{\
+    com block[BLOCK_SIZE];\
+    struct blocked_##com * next;\
+};\
+\
+struct blocked_##com * new_block_(void){\
+    struct blocked_##com * new = NULL;\
+    new = (struct blocked_##com *)malloc(sizeof(struct blocked_##com));\
+    new->next = NULL;\
+    return new;\
+}\
+\
+void setitem_(struct blocked_##com * in, int indx, com el){\
+    if(indx < BLOCK_SIZE){\
+        in->block[indx] = el;\
+        return;\
+    }\
+    if(in->next==NULL){\
+        in->next = new_block_();\
+        setitem_(in->next,indx-BLOCK_SIZE,el);\
+        return;\
+    }\
+    if(in->next!=NULL){\
+        setitem_(in->next,indx-BLOCK_SIZE,el);\
+        return;\
+    }\
+}\
+\
+com getitem_(struct blocked_##com * in, int indx){\
+    if(indx < BLOCK_SIZE){\
+        return in->block[indx];\
+    }\
+    if(in->next!=NULL){\
+        return getitem_(in->next,indx-BLOCK_SIZE);\
+    }\
+    return 0;\
+}\
 
-COMMAND(int)
 
+COMMAND(float)
 
 typedef struct blocked_int
 {
     int block[BLOCK_SIZE];
     struct blocked_int * next;
 } Block;
+//COMMAND(int)
+
+typedef struct blocked_int Block;
 
 Block * new_block();
 
@@ -66,20 +104,21 @@ Block * new_block(void)
 
 int main()
 {
-    int k = fun_int();
+    int k ; 
     Block * b = new_block();
-    setitem(b,0,5);
-    setitem(b,257,k);
-    printf("%d\n",getitem(b,257));
-    setitem(b,600,8);
-    printf("yeet %d\n",getitem(b,600));
-    setitem(b,270,7);
+    struct blocked_float b2;
+    setitem_(&b2,8,9.0);
+    printf("%f\n",getitem_(&b2,8));
     for(int i = 0; i < 10000; ++i)
     {
-        setitem(b,i,i);
-        k = getitem(b,i);
+        setitem(b,i,2);
     }
-    printf("%d\n",getitem(b,5000));
+    k = 0;
+    for(int i = 0; i < 10000; ++i)
+    {
+        k+=getitem(b,i);
+    }
+    printf("%d\n",k);
     return 0;
 }
 
