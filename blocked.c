@@ -8,41 +8,42 @@
     struct blocked_##com * next;\
 };\
 \
-struct blocked_##com * new_block_(void){\
+struct blocked_##com * new_block_##com(void){\
     struct blocked_##com * new = NULL;\
     new = (struct blocked_##com *)malloc(sizeof(struct blocked_##com));\
     new->next = NULL;\
     return new;\
 }\
 \
-void setitem_(struct blocked_##com * in, int indx, com el){\
+void setitem_##com(struct blocked_##com * in, int indx, com el){\
     if(indx < BLOCK_SIZE){\
         in->block[indx] = el;\
         return;\
     }\
     if(in->next==NULL){\
-        in->next = new_block_();\
-        setitem_(in->next,indx-BLOCK_SIZE,el);\
+        in->next = new_block_##com();\
+        setitem_##com(in->next,indx-BLOCK_SIZE,el);\
         return;\
     }\
     if(in->next!=NULL){\
-        setitem_(in->next,indx-BLOCK_SIZE,el);\
+        setitem_##com(in->next,indx-BLOCK_SIZE,el);\
         return;\
     }\
 }\
 \
-com getitem_(struct blocked_##com * in, int indx){\
+com getitem_##com(struct blocked_##com * in, int indx){\
     if(indx < BLOCK_SIZE){\
         return in->block[indx];\
     }\
     if(in->next!=NULL){\
-        return getitem_(in->next,indx-BLOCK_SIZE);\
+        return getitem_##com(in->next,indx-BLOCK_SIZE);\
     }\
     return 0;\
 }\
 
 
 COMMAND(float)
+COMMAND(double)
 
 typedef struct blocked_int
 {
@@ -106,9 +107,10 @@ int main()
 {
     int k ; 
     Block * b = new_block();
-    struct blocked_float b2;
-    setitem_(&b2,8,9.0);
-    printf("%f\n",getitem_(&b2,8));
+    struct blocked_float * b2 = new_block_float();
+    struct blocked_double* b3 = new_block_double();
+    setitem_double(b3,8,9.0);
+    printf("%f\n",getitem_double(b3,8));
     for(int i = 0; i < 10000; ++i)
     {
         setitem(b,i,2);
