@@ -20,6 +20,10 @@ typedef int bool;
     bool needs_malloc;\
 };\
 struct blocked_##dtype * new_block_##dtype(void);\
+void setitem_##dtype(struct blocked_##dtype * in, int indx, dtype el);\
+dtype getitem_##dtype(struct blocked_##dtype * in, int indx);\
+
+#define dynamic_block_funcs(dtype)\
 void setitem_##dtype(struct blocked_##dtype * in, int indx, dtype el){\
     if(indx < BLOCK_SIZE){\
         in->block[indx] = el;\
@@ -31,7 +35,7 @@ void setitem_##dtype(struct blocked_##dtype * in, int indx, dtype el){\
     else if(in->next!=NULL){\
         setitem_##dtype(in->next,indx-BLOCK_SIZE,el);\
     }\
-    if(indx > in->length) in->length = indx+1;\
+    if(indx >= in->length) in->length = indx+1;\
 }\
 \
 dtype getitem_##dtype(struct blocked_##dtype * in, int indx){\
@@ -52,9 +56,10 @@ struct blocked_##dtype * new_block_##dtype(void){\
     return new;\
 }\
 \
-
 #define getter(class, ind) (class->get(class,ind))
 #define setter(class, ind, el) (class->set(class,ind,el))
 #define swap(class1,class2,ind) (setter(class1,ind,getter(class2,ind)))
+#define len(class) (class->length)
+#define append(class, el) (class->set(class,len(class),el))
 
 #endif //__STATIC_BLOCKS_H__
