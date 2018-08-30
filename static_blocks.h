@@ -56,6 +56,7 @@ struct blocked_##dtype * new_block_##dtype(void){\
     return new;\
 }\
 \
+
 #define getter(class, ind) (class->get(class,ind))
 #define setter(class, ind, el) (class->set(class,ind,el))
 #define swap(class1,class2,ind) (setter(class1,ind,getter(class2,ind)))
