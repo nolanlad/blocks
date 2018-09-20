@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define BLOCK_SIZE 256 
 
 typedef int bool;
 #define true 1

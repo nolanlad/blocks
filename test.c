@@ -13,6 +13,10 @@ dynamic_block(float);
 dynamic_block(int);
 dynamic_block(Point);
 
+dynamic_block_funcs(Point);
+dynamic_block_funcs(int);
+dynamic_block_funcs(float);
+
 typedef char* str;
 
 variable_block(str);
